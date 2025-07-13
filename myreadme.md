@@ -100,3 +100,166 @@ now on just typing kscript in terminal you get the output as
 ******************************************************************************
 # 2 lexer
 set of functions that know how to turn your source code into tokens
+
+In C (and C++), .h files are header files — they declare functions, types, and structs so they can be used in other files. Think of them like contracts.
+
+.c files are source files — they implement the logic you declared in the header.
+
+You can reuse a header across multiple .c files, which is great for modular code. It also keeps your implementation clean and separated.
+
+token.h — The token definitions
+defines what a token is — a token is a basic unit the lexer emits (like ID, STRING, EQUALS, etc.)
+
+Creates a token_T object in heap memory with zero-initialized bytes.
+Sets the token’s type, like TOKEN_ID, TOKEN_STRING, etc.
+Sets the actual text value, like "name", "=", etc.
+
+
+
+TokenType enum defines different types of tokens.
+token_T struct stores the type and actual string value (e.g., "name" or "=").
+init_token(...) is declared in token.h (implemented in token.c).
+
+token.c — Token constructor implementation
+Implements the init_token function to create new tokens using calloc.
+
+lexer.h — The lexer definitions
+lexer.c — Lexer logic implementation
+Key Functions:
+1. init_lexer(contents)
+Creates a new lexer object with the input source code.
+
+2. lexer_advance
+Moves the character pointer one step forward.
+
+3. lexer_get_next_token
+The main loop: decides what the next token should be.
+
+4. lexer_collect_string
+If we find ", it collects a whole string "like this".
+
+5. lexer_collect_id
+If we find letters or digits (like var, name), it collects the identifier.
+
+6. lexer_advance_with_token
+Returns a token and advances the lexer.
+
+7. lexer_get_current_char_as_string
+Returns the current character as a dynamically allocated string (for token values).
+
+main.c — Entry point / testing
+your test harness — it feeds a simple script to the lexer and prints out the tokens.
+
+
+
+main.c  ─────┐
+             │
+             ▼
+         lexer.c  ───── uses ─────▶ token.c
+             ▲                        ▲
+             │                        │
+         lexer.h                  token.h
+Your lexer produces tokens. Each token is created using init_token() from token.c.
+Header files ensure each .c file knows how to talk to the others.
+
+
+A lexer (short for lexical analyzer) is the first part of a compiler or interpreter.
+
+Its job:
+It takes raw source code like this:
+
+js
+Copy
+Edit
+var name = "ojas ks";
+print(name);
+…and splits it into meaningful pieces called tokens, such as:
+
+var → identifier
+
+name → identifier
+
+= → equals sign
+
+"ojas ks" → string literal
+
+; → semicolon
+
+etc.
+This makes it easier for the parser to understand the structure of the code.
+
+
+
+What does calloc do?
+Allocates memory for 1 object of size sizeof(struct TOKEN_STRUCT)
+Initializes all bytes to zero
+This is safer than malloc() when you want to avoid uninitialized memory bugs.
+
+
+in this context?
+A token is just a struct with:
+type: What kind of thing it is (identifier, string, equals sign...)
+value: The actual characters found in the code (like "name")
+Tokens are the building blocks the parser will later use to make sense of the program.
+
+Understanding main.c
+The lexer reads one token at a time until there are no more.
+Prints the type and value of each token.
+
+
+
+
+
+
+If you wanted to write this in C++, what would change?
+C++ lets you do all this in a much cleaner and more OOP-friendly way.
+
+You’d use classes instead of manually managing structs and functions.
+
+You wouldn't need typedef struct, just class or struct.
+
+You could avoid raw malloc/calloc/free and use constructors.
+
+You might combine .h and .c into .hpp and .cpp.
+
+
+Token.cpp
+Implements the constructor for Token.
+This uses an initializer list to assign type and value directly when creating a new Token.
+
+The constructor takes in a source code string.
+getNextToken() returns one token at a time.
+The private helpers:
+advance() moves to the next character.
+skipWhitespace() ignores spaces/newlines.
+collectString() gathers a full string like "ojas ks".
+collectId() collects identifiers like print, name.
+currentCharAsString() returns current character as a string.
+
+main.cpp
+Purpose:
+This is the entry point. It sets up the lexer and prints each token one by one.
+Initializes a lexer with a small snippet of code.
+Fetches tokens one by one and prints them.
+delete token; frees memory after each use.
+
+
+main.cpp
+  └── uses Lexer.hpp
+          └── uses Token.hpp
+Lexer.cpp
+  └── implements Lexer logic using Token
+Token.cpp
+  └── implements the Token constructor
+
+Everything revolves around Token objects.
+Lexer breaks code into Tokens.
+Main shows how this all works together.
+
+Main: Feeds code to the lexer and prints all the tokens
+Lexer: Splits code into tokens using character-by-character logic
+Token: A small unit like =, "ojas ks", or name
+
+
+
+

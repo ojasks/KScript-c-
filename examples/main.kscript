@@ -1,0 +1,4 @@
+var name = " ojas ks"
+print(name);
+
+
