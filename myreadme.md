@@ -260,6 +260,26 @@ Main: Feeds code to the lexer and prints all the tokens
 Lexer: Splits code into tokens using character-by-character logic
 Token: A small unit like =, "ojas ks", or name
 
+******************************************************************************
+# 3 Parser
+first thing we gonna do is define the ast .h
+then ast.c
+
+in ast.c
+
+AST_T* init_ast(int type)
+{
+    AST_T* ast = calloc(1,sizeof(struct AST_STRUCT));
+
+Creates a new AST node.
+calloc allocates memory and zeroes it out.
+type is the kind of AST node (e.g., assignment, string, function call).
+
+Initializes all fields to NULL (or zero for the size).
+This avoids undefined behavior if you try to use them later without setting them.
+
+What this code is for
+You call this when you're constructing nodes for your abstract syntax tree (AST).
 
 
-
+compound is a list of multiple statements

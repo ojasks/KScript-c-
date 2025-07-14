@@ -1,6 +1,7 @@
 #include<stdio.h>
 // now we write our main entry point 
 #include "include/lexer.h"
+#include "include/parser.h"
 
 int main(int argc , char* argv[])  
 {
@@ -9,11 +10,17 @@ int main(int argc , char* argv[])
         "var name = \" ojas ks\";\n"
         "print(name);\n"
     );
-    token_T* token = (void*)0;
+    // token_T* token = (void*)0;
     
-    while((token = lexer_get_next_token(lexer)) != (void*)0){
-        printf("TOKEN(%d, %s)\n", token->type, token->value);
-    }
+    // while((token = lexer_get_next_token(lexer)) != (void*)0){
+    //     printf("TOKEN(%d, %s)\n", token->type, token->value);
+    // }
+
+    parser_T* parser = init_parser(lexer);
+    AST_T* root = parser_parse(parser);
+    
+    printf("%d\n",root->type);
+    printf("%d\n",root->compound_size);
     return 0;
 }
 

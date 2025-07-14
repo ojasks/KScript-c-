@@ -19,7 +19,9 @@ typedef enum {
     TOKEN_SEMI,
     TOKEN_STRING,
     TOKEN_LPAREN,
-    TOKEN_RPAREN
+    TOKEN_RPAREN,
+    TOKEN_COMMA,
+    TOKEN_EOF
 } TokenType;
 
 typedef struct TOKEN_STRUCT {
