@@ -16,7 +16,8 @@ typedef enum {
     AST_STRING,
     AST_FUNCTION_CALL,
     AST_VARIABLE,
-    AST_COMPOUND
+    AST_COMPOUND,
+    AST_NOOP
 } ASTType;
 
 typedef struct AST_STRUCT
