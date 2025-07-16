@@ -1,0 +1,4 @@
+var name = "ojas ks";
+var othername = "google agentic ai";
+var other = "failure leads to success";
+print(name,othername,other);

@@ -1,0 +1,3 @@
+var name = "ojas ks";
+var othername = "gurman";
+print(name,othername);
