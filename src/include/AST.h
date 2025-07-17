@@ -13,6 +13,7 @@
 
 typedef enum {
     AST_VARIABLE_DEFINITION,
+    AST_FUNCTION_DEFINITION,
     AST_STRING,
     AST_FUNCTION_CALL,
     AST_VARIABLE,
@@ -27,6 +28,8 @@ typedef struct AST_STRUCT
         //  AST_VARIABLE_DEFINITION
     char* variable_definition_variable_name;
     struct AST_STRUCT* variable_defintion_value;
+        //  AST_FUNCTION_DEFINITION
+    struct AST_STRUCT* function_definition_body;
         //  AST_STRING
     char* variable_name;
         // AST_FUNCTION_CALL

@@ -44,6 +44,11 @@ AST_T* parser_parse_statement(parser_T* parser)
     {
         case TOKEN_ID: return parser_parse_id(parser);
         case TOKEN_EOF: return NULL; // safe exit
+         default:
+            printf("❌ Unexpected token in parser_parse_statement: type = %d, value = %s\n",
+                parser->current_token->type,
+                parser->current_token->value);
+        
     }
     return init_ast(AST_NOOP);
 }
@@ -51,9 +56,7 @@ AST_T* parser_parse_statement(parser_T* parser)
 AST_T* parser_parse_statements(parser_T* parser)
 {
     AST_T* compound = init_ast((AST_COMPOUND));
-
     compound->compound_value = calloc(1,sizeof(struct AST_STRUCT*));
-
     AST_T* ast_statement = parser_parse_statement(parser);
 
     if (ast_statement)
@@ -65,6 +68,8 @@ AST_T* parser_parse_statements(parser_T* parser)
 
     while(parser->current_token->type == TOKEN_SEMI)
     {
+        if (parser->current_token->type == TOKEN_RBRACE)
+            break;
     parser_eat(parser, TOKEN_SEMI);
 
     AST_T* next_statement = parser_parse_statement(parser);
@@ -78,6 +83,7 @@ AST_T* parser_parse_statements(parser_T* parser)
     compound->compound_size * sizeof(struct AST_STRUCT*)
     );
     compound->compound_value[compound->compound_size - 1] = next_statement;
+    
     }
 }
     return compound;
@@ -89,6 +95,8 @@ AST_T* parser_parse_expr(parser_T* parser)
     {
          case TOKEN_ID: return parser_parse_id(parser);
         case TOKEN_STRING: return parser_parse_string(parser);
+         default: printf("Unexpected token in parser_parse_expr: %d\n", parser->current_token->type);
+        
     }
     return init_ast(AST_NOOP);
 }
@@ -151,6 +159,22 @@ AST_T* parser_parse_variable_definition(parser_T* parser)
 
 }
 
+AST_T* parser_parse_function_definition(parser_T* parser)
+{
+     AST_T* ast = init_ast(AST_FUNCTION_DEFINITION);
+    parser_eat(parser, TOKEN_ID); //function
+    char* function_name = parser->current_token->value;
+    parser_eat(parser, TOKEN_ID); //function
+    parser_eat(parser, TOKEN_LPAREN); //function
+    parser_eat(parser, TOKEN_RPAREN); //function
+    parser_eat(parser, TOKEN_LBRACE); //function
+    ast->function_definition_body = parser_parse_statements(parser);
+    parser_eat(parser, TOKEN_RBRACE); //function
+
+    return ast;
+
+}
+
 AST_T* parser_parse_variable(parser_T* parser)
 {
     char* token_value = parser->current_token->value;
@@ -179,6 +203,10 @@ AST_T* parser_parse_id(parser_T* parser)
     if(strcmp(parser->current_token->value, "var") == 0)
     {
         return parser_parse_variable_definition(parser);
+    }
+    else if(strcmp(parser->current_token->value, "function") == 0)
+    {
+        return parser_parse_function_definition(parser);
     }
     else{
         return parser_parse_variable(parser);
