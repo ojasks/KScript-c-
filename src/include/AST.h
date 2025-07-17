@@ -25,11 +25,14 @@ typedef struct AST_STRUCT
 {
     ASTType type;
 
+    struct SCOPE_STRUCT* scope;
+
         //  AST_VARIABLE_DEFINITION
     char* variable_definition_variable_name;
     struct AST_STRUCT* variable_defintion_value;
         //  AST_FUNCTION_DEFINITION
     struct AST_STRUCT* function_definition_body;
+     char* function_definition_name;
         //  AST_STRING
     char* variable_name;
         // AST_FUNCTION_CALL

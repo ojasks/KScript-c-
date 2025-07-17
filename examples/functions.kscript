@@ -1,5 +1,8 @@
 function dosomething()
 {
-    print("something");
-}
+    print("something..., it definately took a lot of time, this is our function calliing ");
+};
+dosomething();
+dosomething();
+dosomething();
 dosomething();
